@@ -1,10 +1,11 @@
 /**
- * Bagian 1: totalDurasi()
+ * Bagian 1: totalDurasi() Bagian 2: tampilkanMundur() 
  *
  * Nama   : Renata Ramadhanyandra
  * NIM    : NIM: 2902696426
- */
-
+ *
+ * Nama : Dustin Ballqis Saputra
+ * NIM : 2902730445
 class Lagu {
     private String judul;
     private String penyanyi;
@@ -46,6 +47,27 @@ public class PlaylistRekursif {
         return list[n - 1].getDurasi() + totalDurasi(list, n - 1);
     }
 
+    /**
+     * Tujuan        : Menampilkan daftar lagu dari belakang (rekursif)
+     *
+     * Base case     : n == 0 → berhenti
+     *
+     * Recursive case: cetak lagu ke-(n-1), lalu panggil ke sisa data
+     *
+     * Kompleksitas  : O(n)
+     */
+    public static void tampilkanMundur(Lagu[] list, int n) {
+        if (n == 0) {
+            return;
+        }
+
+        Lagu lagu = list[n - 1];
+        System.out.println(lagu.getJudul() + " - " + lagu.getPenyanyi() +
+                           " (" + lagu.getDurasi() + " menit)");
+
+        tampilkanMundur(list, n - 1);
+    }
+
     public static void main(String[] args) {
 
         // --- Data dummy: 5 lagu ---
@@ -69,6 +91,24 @@ public class PlaylistRekursif {
 
         System.out.printf("Total durasi         : %.2f menit%n", total);
         System.out.println("Execution Time       : " + ms + " ms");
+        System.out.println();
+        System.out.println("--- Analisis Kompleksitas ---");
+        System.out.println("Base case            : n == 0");
+        System.out.println("Growth rate          : Linear");
+        System.out.println("Kompleksitas waktu   : O(n)");
+
+        // ===== TAMBAHAN BAGIAN 2 =====
+        System.out.println();
+        System.out.println("=== BAGIAN 2: tampilkanMundur() ===");
+
+        long mulai2 = System.nanoTime();
+
+        tampilkanMundur(playlist, playlist.length);
+
+        long selesai2 = System.nanoTime();
+        long ms2 = (selesai2 - mulai2) / 1_000_000;
+
+        System.out.println("Execution Time       : " + ms2 + " ms");
         System.out.println();
         System.out.println("--- Analisis Kompleksitas ---");
         System.out.println("Base case            : n == 0");
