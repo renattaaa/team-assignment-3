@@ -1,11 +1,14 @@
 /**
- * Bagian 1: totalDurasi() Bagian 2: tampilkanMundur() 
- *
- * Nama   : Renata Ramadhanyandra
- * NIM    : NIM: 2902696426
- *
- * Nama : Dustin Ballqis Saputra
- * NIM : 2902730445
+ * Tugas Kelompok 3 (Week 8 - Rekursif)
+ * Deskripsi: Implementasi sistem playlist menggunakan metode rekursif.
+ * Bagian 1: totalDurasi() 
+ * Nama: Renata Ramadhanyandra
+ * Bagian 2: tampilkanMundur()
+ * Nama: Dustin Ballqis Saputra
+ * Bagian 3: CariDurasiTerpanjang()
+ * Nama: Daffa Fathur Rahman
+ */
+
 class Lagu {
     private String judul;
     private String penyanyi;
@@ -23,8 +26,8 @@ class Lagu {
 }
 
 public class PlaylistRekursif {
-
-    /**
+    
+     /**
      * Tujuan        : Menghitung total durasi seluruh lagu dalam playlist secara rekursif.
      *
      * Base case     : n == 0
@@ -39,11 +42,7 @@ public class PlaylistRekursif {
      *                 Setiap pemanggilan melakukan 1 operasi penjumlahan → linear.
      */
     public static double totalDurasi(Lagu[] list, int n) {
-        // Base case: tidak ada lagu tersisa
-        if (n == 0) {
-            return 0.0;
-        }
-        // Recursive case: durasi lagu ke-(n-1) + total sisa
+        if (n == 0) return 0.0;
         return list[n - 1].getDurasi() + totalDurasi(list, n - 1);
     }
 
@@ -57,20 +56,46 @@ public class PlaylistRekursif {
      * Kompleksitas  : O(n)
      */
     public static void tampilkanMundur(Lagu[] list, int n) {
-        if (n == 0) {
-            return;
-        }
-
+        if (n == 0) return;
         Lagu lagu = list[n - 1];
-        System.out.println(lagu.getJudul() + " - " + lagu.getPenyanyi() +
-                           " (" + lagu.getDurasi() + " menit)");
-
+        System.out.println(lagu.getJudul() + " - " + lagu.getPenyanyi() + " (" + lagu.getDurasi() + " menit)");
         tampilkanMundur(list, n - 1);
     }
 
-    public static void main(String[] args) {
+    /**
+     * Bagian 3: cariDurasiTerpanjang() (Rekursif)
+     * Tujuan        : Mencari durasi lagu terbesar dalam playlist secara rekursif.
+     * 
+     * Base Case     : n == 1 
+     *                 Jika hanya tersisa satu lagu, maka lagu tersebut memiliki durasi terpanjang.[cite: 1]
+     * 
+     * Recursive Case: Membandingkan lagu pada indeks terakhir dengan nilai maksimum 
+     *                 dari sisa lagu yang diproses oleh pemanggilan rekursif.[cite: 1]
+     * 
+     * Analisis Kritis: Penggunaan variabel bantuan 'maxSisa' sangat penting untuk 
+     *                 mencegah pemanggilan fungsi berulang yang tidak efisien (redundant).
+     * 
+     * Kompleksitas  : O(n) karena setiap elemen diperiksa tepat satu kali.[cite: 2]
+     */
+    public static double cariDurasiTerpanjang(Lagu[] list, int n) {
+        // Base case: jika tinggal satu lagu
+        if (n == 1) {
+            return list[0].getDurasi();
+        }
 
-        // --- Data dummy: 5 lagu ---
+        // Recursive case
+        double maxSisa = cariDurasiTerpanjang(list, n - 1);
+        
+        // Membandingkan elemen saat ini dengan pemenang dari sisa playlist
+        if (list[n - 1].getDurasi() > maxSisa) {
+            return list[n - 1].getDurasi();
+        } else {
+            return maxSisa;
+        }
+    }
+
+    public static void main(String[] args) {
+        // Data dummy: 5 lagu
         Lagu[] playlist = {
             new Lagu("Perfect",      "Ed Sheeran", 4.23),
             new Lagu("Shivers",      "Ed Sheeran", 3.50),
@@ -79,39 +104,29 @@ public class PlaylistRekursif {
             new Lagu("Viva La Vida", "Coldplay",   4.03)
         };
 
+        // --- EKSEKUSI BAGIAN 1 ---
         System.out.println("=== BAGIAN 1: totalDurasi() ===");
-        System.out.println("Jumlah lagu : " + playlist.length);
-
-        // --- Pengukuran waktu eksekusi ---
-        long mulai   = System.nanoTime();
+        long mulai1 = System.nanoTime();
         double total = totalDurasi(playlist, playlist.length);
-        long selesai = System.nanoTime();
-
-        long ms = (selesai - mulai) / 1_000_000;
-
+        long selesai1 = System.nanoTime();
         System.out.printf("Total durasi         : %.2f menit%n", total);
-        System.out.println("Execution Time       : " + ms + " ms");
-        System.out.println();
-        System.out.println("--- Analisis Kompleksitas ---");
-        System.out.println("Base case            : n == 0");
-        System.out.println("Growth rate          : Linear");
-        System.out.println("Kompleksitas waktu   : O(n)");
+        System.out.println("Execution Time       : " + (selesai1 - mulai1) / 1_000_000 + " ms");
 
-        // ===== TAMBAHAN BAGIAN 2 =====
-        System.out.println();
-        System.out.println("=== BAGIAN 2: tampilkanMundur() ===");
-
+        // --- EKSEKUSI BAGIAN 2 ---
+        System.out.println("\n=== BAGIAN 2: tampilkanMundur() ===");
         long mulai2 = System.nanoTime();
-
         tampilkanMundur(playlist, playlist.length);
-
         long selesai2 = System.nanoTime();
-        long ms2 = (selesai2 - mulai2) / 1_000_000;
+        System.out.println("Execution Time       : " + (selesai2 - mulai2) / 1_000_000 + " ms");
 
-        System.out.println("Execution Time       : " + ms2 + " ms");
-        System.out.println();
-        System.out.println("--- Analisis Kompleksitas ---");
-        System.out.println("Base case            : n == 0");
+        // --- EKSEKUSI BAGIAN 3 ---
+        System.out.println("\n=== BAGIAN 3: cariDurasiTerpanjang() ===");
+        long mulai3 = System.nanoTime();
+        double max = cariDurasiTerpanjang(playlist, playlist.length);
+        long selesai3 = System.nanoTime();
+        System.out.printf("Durasi terpanjang    : %.2f menit%n", max);
+        System.out.println("Execution Time       : " + (selesai3 - mulai3) / 1_000_000 + " ms");
+        System.out.println("\n--- Analisis Kompleksitas Bagian 3 ---");
         System.out.println("Growth rate          : Linear");
         System.out.println("Kompleksitas waktu   : O(n)");
     }
